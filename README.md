@@ -1,4 +1,4 @@
-###What Is This Repository for ?
+### What Is This Repository for ?
 
 This repository is my reading notes of the book by Valliappa Lakshmanan, _Data Science on the Google Cloud Platform_(2018).
 
@@ -10,7 +10,7 @@ When I went through and ran the code on my personal Mac and GCP-project, I got s
 
 To have a better understanding of the content of the content, and a solid reference based on this book's code. I motivated myself to rewrite/reorganize the code in the clean code style, introduced by the book, _Clean Code: A Handbook of Agile Software Craftsmanship_, of Robert C. Martin.
 
-###Principles of coding 
+### Principles of coding 
 I cannot say that my code is so clean as the book showed. But I spend much effort to follow the following three principles: 
 
 ##### No Comments, Only Codes
