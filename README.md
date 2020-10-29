@@ -34,3 +34,5 @@ If the code is clean enough, readers can understand it with only up-down reading
 
 
 ##### There finds individual README in each chapter, as a mini handbook to implement the code, and see the expected results.  
+
+*To be clear, there are not any initial ideas or contents in this tutorial. All work has been done can be found in the book of Mr. Lakshmanan.*
