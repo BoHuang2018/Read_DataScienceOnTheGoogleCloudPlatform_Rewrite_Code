@@ -193,6 +193,24 @@ class CalculateYearMonthToDownloadFromBTSbyMostRecentRecordOnCloudStorage:
         return '{}'.format(date_of_next_month.year), '{:02d}'.format(date_of_next_month.month)
 
 
+def implement_download_clean_verify_upload(year_of_flights, month_of_flights, upload_bucket_in_cloud_storage,
+                                           path_in_bucket):
+    temporary_directory_store_downloaded_data = tempfile.mkdtemp(prefix='ingest_flights')
+    download_flights_record_csv = FlightRecordsDownloader(year_of_flights, month_of_flights,
+                                                          temporary_directory_store_downloaded_data)
+    downloaded_csv = download_flights_record_csv.csv_file_with_flights_record_extracted_from_downloaded_zip_file
+    clean_downloaded_data_csv = DataCleanAfterDownload(downloaded_csv, year_of_flights, month_of_flights)
+    cleaned_data_csv = clean_downloaded_data_csv.csv_with_cleaned_data
+    DataVerificationRemoveUnqualifiedCsvFile(cleaned_data_csv, expected_header)
+    upload_cleaned_data_csv = UploadCleanCsvToCloudStorage(upload_bucket_in_cloud_storage, path_in_bucket,
+                                                           cleaned_data_csv)
+    logging.info('Uploaded flight-records in csv of {}-{} to {}'
+                 .format(year_of_flights, month_of_flights,
+                         upload_cleaned_data_csv.complete_target_cloud_storage_location))
+    shutil.rmtree(temporary_directory_store_downloaded_data)
+    return
+
+
 def download_bts_flights_records_upload_cloud_storage(upload_bucket_in_cloud_storage, path_in_bucket,
                                                       year_of_flights_string_four_digits=None,
                                                       month_of_flights_string_two_digits=None):
@@ -213,24 +231,6 @@ def download_bts_flights_records_upload_cloud_storage(upload_bucket_in_cloud_sto
                                                upload_bucket_in_cloud_storage, path_in_bucket)
     except DataUnavailable as e:
         logging.info('Try again later: {}'.format(e.message))
-    return
-
-
-def implement_download_clean_verify_upload(year_of_flights, month_of_flights, upload_bucket_in_cloud_storage,
-                                           path_in_bucket):
-    temporary_directory_store_downloaded_data = tempfile.mkdtemp(prefix='ingest_flights')
-    download_flights_record_csv = FlightRecordsDownloader(year_of_flights, month_of_flights,
-                                                          temporary_directory_store_downloaded_data)
-    downloaded_csv = download_flights_record_csv.csv_file_with_flights_record_extracted_from_downloaded_zip_file
-    clean_downloaded_data_csv = DataCleanAfterDownload(downloaded_csv, year_of_flights, month_of_flights)
-    cleaned_data_csv = clean_downloaded_data_csv.csv_with_cleaned_data
-    DataVerificationRemoveUnqualifiedCsvFile(cleaned_data_csv, expected_header)
-    upload_cleaned_data_csv = UploadCleanCsvToCloudStorage(upload_bucket_in_cloud_storage, path_in_bucket,
-                                                           cleaned_data_csv)
-    logging.info('Uploaded flight-records in csv of {}-{} to {}'
-                 .format(year_of_flights, month_of_flights,
-                         upload_cleaned_data_csv.complete_target_cloud_storage_location))
-    shutil.rmtree(temporary_directory_store_downloaded_data)
     return
 
 
