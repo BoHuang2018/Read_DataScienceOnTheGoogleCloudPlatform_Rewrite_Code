@@ -13,6 +13,11 @@ Of course, there finds a sequence of steps we need to walk through to do the job
 2. Unzip the scraped data to csv.
 3. Clean and verify the csv is qualified.
 4. Store the qualified data in a bucket of Cloud Storage (GCP) 
-- The above four works are wrapped in one python function.
+`(The above four works are wrapped in one python function.)`
+5. Schedule the function running the above four tasks, to extend stored data regularly. 
+
+#### Architecture on GCP
+To implement the data collection work on GCP, we need to use the following GCP products
+1. 
 
 
