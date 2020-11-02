@@ -98,4 +98,25 @@ To the issue of security, we generate a token which will be embedded into code a
    After one or two minutes, in the bucket, you will see twelve new csv files, 201501.csv, 201502.csv, ..., 201512.csv.
    All of the data has been verified and cleared. 
 
-4. ***Regular Data Updating with Cloud Schedular
+4. ***Regular Data Updating with Cloud Scheduler***
+    
+    Usually, we need to keep scraping new upcoming data to update the analysis. Now we have all data of 2015 stayed in 
+    the bucket of Cloud Storage. We use Cloud Scheduler to make the Cloud Function run once a month to scrape next month's 
+    flight record. The work flow is 
+    
+    (1). Detect the latest month of data in the bucket of Cloud Storage
+    
+    (2). Generate the parameters of month and year to scrape data of "next month"
+    
+    (3). Append new scraped data to the bucket of Storage if the scraping succeed.
+    
+    The above steps will be implemented at given time point. In addition, Cloud Scheduler has a button of 'RUN NOW', to run 
+    the instance of Cloud Functions whenever you want. 
+    
+    The code to configure Cloud Scheduler is ready in the bash file `setup_cloud_scheduler.sh`. Just use it
+    
+    `bash setup_cloud_scheduler.sh`
+    
+    In the UI of Cloud Scheduler of GCP Console, it will find a new instance named "flights_data_collect_workflow", the value 
+    of the column named "Target" is URL of the instance of Cloud Functions. In the column named "Run", we see a button named 
+    "RUN NOW". Clicking the button, the function will scrape the data of January 2016 from the website of BTS.
