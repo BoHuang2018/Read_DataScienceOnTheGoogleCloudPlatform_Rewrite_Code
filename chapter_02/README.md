@@ -92,7 +92,7 @@ To the issue of security, we generate a token which will be embedded into code a
    (the current path is `/Read_DataScienceOnTheGoogleCloudPlatform_Rewrite_Code/chapter_02/monthly_flights_data_collecter
 `)
    
-   `bash cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_to_collect_data_of_2015.sh
+    `bash cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_to_collect_data_of_2015.sh
 `    
 
    After one or two minutes, in the bucket, you will see twelve new csv files, 201501.csv, 201502.csv, ..., 201512.csv.
@@ -119,4 +119,17 @@ To the issue of security, we generate a token which will be embedded into code a
     
     In the UI of Cloud Scheduler of GCP Console, it will find a new instance named "flights_data_collect_workflow", the value 
     of the column named "Target" is URL of the instance of Cloud Functions. In the column named "Run", we see a button named 
-    "RUN NOW". Clicking the button, the function will scrape the data of January 2016 from the website of BTS.
+    "RUN NOW". Clicking the button, the function will scrape the data of January 2016 
+    (since the latest month of data in the bucket is December 2015) from the website of BTS.
+    
+We have gone through the majority of this chapter. If you want to scrape data with a given month and year, code in the file, 
+`cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_with_year_month.sh` will do the job. 
+Check the seventh line of this file 
+    
+    `echo {\"year\":\"2016\"\,\"month\":\"07\"\,\"bucket\":\"${BUCKET}\"\,\"token\":\"${TOKEN_RUN_CLOUD_FUNCTION}\"} > /tmp/message`
+    
+It runs to scrape data of July 2016 by
+
+    `bash cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_with_year_month.sh`
+    
+It will scrape another time's data if you replace the values of 'year' and 'month' in the line. 
