@@ -39,6 +39,13 @@ The only thing we need to mention here is bucket naming pattern. The recommended
 For example, the project name is "pretty-project", we add "ugly-bucket", 
 so the bucket name will be "pretty-project-ugly-bukcet".
 
+In the new created bucket, we need to use the button "CREATE FOLDER" to create a folder named 'flights', 
+then, create a child folder named 'raw' in the flights. The completed path in the bucket is 
+
+    `pretty-project-ugly-bukcet/flights/raw`
+
+This is where we store scraped data.
+
 ##### Deploy Cloud Functions Instance
 In the book, the author tested the code locally (on the Cloud Shell, so it should be locally on a virtual machine). 
 Here, we run it directly on the instance of Cloud Functions. In my eyes, Cloud Functions has better generality than single machine. 
@@ -68,12 +75,27 @@ To the issue of security, we generate a token which will be embedded into code a
 2. ***Deploy Cloud Functions***
     
     All code (bash) is ready to use in a bash file. Just use it 
+    
     `bash cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_to_collect_data_of_2015.sh`
     
     After some seconds, we can see a instance of Cloud Functions on the GCP console. The name would be "_flights_data_collect78jdf..._", 
     the wield characters after '_flights_data_collect_' is the token we generated. This instance has an unguessable name. 
     
-    Please note the value of 'Memory allocated' ......
+    Please note the value of 'Memory allocated' is "1GiB", the value in the book is default as "256MiB". In my tests, "256MiB" was not enough and led to errors. 
 
-    
+    Now we can use the deployed function to collect flight records.
 
+3. ***Collect Flight-Records In Batch***
+   
+   In the following chapters, object of data work is the flights record of 2015. So we need to scrape the flight-records 
+   from January 2015 to December 2015, and store the data in the bucket of Cloud Storage. This can be done as 
+   (the current path is `/Read_DataScienceOnTheGoogleCloudPlatform_Rewrite_Code/chapter_02/monthly_flights_data_collecter
+`)
+   
+   `bash cloud_function_deploy_run_with_security_layer/call_cloud_function_trigger_url_to_collect_data_of_2015.sh
+`    
+
+   After one or two minutes, in the bucket, you will see twelve new csv files, 201501.csv, 201502.csv, ..., 201512.csv.
+   All of the data has been verified and cleared. 
+
+4. ***Regular Data Updating with Cloud Schedular
