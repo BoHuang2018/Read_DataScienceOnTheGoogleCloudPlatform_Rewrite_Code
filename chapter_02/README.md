@@ -1,4 +1,4 @@
-### Brief description of Contents
+### Brief description of Chapter 02
 Data collection is a precondition of all data science and/or data engineering work. The project of the whole book is to do some 
 data science work on USA's flights record. 
 
