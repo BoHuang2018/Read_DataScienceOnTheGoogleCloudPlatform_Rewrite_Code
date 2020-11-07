@@ -1,7 +1,6 @@
 #!/bin/bash
 source cloud_sql_configuration.sh
 
-# To run mysqlimport and mysql, authorize CloudShell
 bash authorize_cloudshell_by_patching_authorized_networkds.sh
 
 # Connect to MySQL using its IP address and do the import
