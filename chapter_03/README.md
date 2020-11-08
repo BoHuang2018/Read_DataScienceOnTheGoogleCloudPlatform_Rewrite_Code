@@ -10,8 +10,57 @@ The work of this chapter consists of the following in order.
 
 #### 1. Create Instance of Cloud SQL
 
+    bash create_cloud_sql_instance.sh
+
+In the UI of Cloud SQL, it finds a new created instance named "flights", its type is 'MySQL 5.7', 
+status of 'High availability' is ADD (enabled). This is an empty instance now. We content it. 
+
+
 #### 2. Create Table of The Instance of Cloud SQL
+    
+    bash create_table_in_sql_instance.sh
+    
+Now you can find an empty table with 27 features (27 columns). The UI of Cloud SQL cannot show the existence. 
+We need to use the following commands in the terminal.
+
+    mysql --host=public_ip_address_of_cloud_sql_instance --user=root --password=generated_by_openssl
+
+Then the terminal will be switch to the CLI of MySQL, there should be a database named 'bts' where we can find the new created table 'flights'. Just go through the following steps
+
+    mysql> use bts             # command 
+    Database changed           # response from mysql
+    mysql> describe flights;   # command
+    +-----------------------+-------------+------+-----+---------+-------+
+    | Field                 | Type        | Null | Key | Default | Extra |
+    +-----------------------+-------------+------+-----+---------+-------+
+    | FL_DATE               | date        | YES  |     | NULL    |       |
+    | UNIQUE_CARRIER        | varchar(16) | YES  |     | NULL    |       |
+    | AIRLINE_ID            | varchar(16) | YES  |     | NULL    |       |
+    | CARRIER               | varchar(16) | YES  |     | NULL    |       |
+    ......
+    
+It showed all the features and related properties. We check it has no content by looking into the first column 
+
+    mysql> select DISTINCT(FL_DATE) from flights;
+
+It will return that no content can be found in the table. 
 
 #### 3. Populate Data In Table And Create Views of The Table (data from csv in Cloud Storage)
 
-#### 4. Problem of Generating Dashboard as the book
+It is time to populate the empty table with flight records of Jan 2015 and Jul 2015. 
+That means, extract the data from the csv files, 201501.csv and 201507.csv, and inject into the table.
+
+    bash populate_table_with_csv_from_gcloud_storage.sh
+
+Please note that the core tool, **_mysqlimport_**, cannot read directly from Cloud Storage. So we copy the target
+file to the local directory, then use **_mysqlimport_** to read the data and inject to the table.
+
+#### 5. Problem of Generating Dashboard as the book
+
+Now we have data in Cloud SQL which can be data resource of Data Studio. Naturally, the book uses Data Studio to make a report. 
+The report is a pdf (_flightsRecordsfromBTS.pdf_) file can be checked. We skip the steps (UI work) to generate the report. 
+But I have to mention one point :
+
+The book created three more views of table than build one more columns. Then the views were used as data source to charts. 
+The inconvenience is that, the data source managing UI in DataStudio does not show tables' names, only the database name. So it would
+be confused to check which data source standing behind which charts. 
