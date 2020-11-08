@@ -55,6 +55,45 @@ That means, extract the data from the csv files, 201501.csv and 201507.csv, and 
 Please note that the core tool, **_mysqlimport_**, cannot read directly from Cloud Storage. So we copy the target
 file to the local directory, then use **_mysqlimport_** to read the data and inject to the table.
 
+#### 4. Contingency Table / Confusion Matrix
+
+The book calculated three contingency tables with three departure delay minutes, 10 minutes, 15 minutes and 20 minutes.
+
+    bash bash contingengcy_table_10_minutes_departure_delay.sh 
+    
+    # the below are responds ....
+    
+    mysql: [Warning] Using a password on the command line interface can be insecure.
+    --------------
+    select count(dest) from flights where arr_delay < 15 and dep_delay < 10
+    --------------
+    
+    count(dest)
+    713545
+    --------------
+    select count(dest) from flights where arr_delay >= 15 and dep_delay < 10
+    --------------
+    
+    count(dest)
+    33823
+    --------------
+    select count(dest) from flights where arr_delay < 15 and dep_delay >= 10
+    --------------
+    
+    count(dest)
+    73563
+    --------------
+    select count(dest) from flights where arr_delay >= 15 and dep_delay >= 10
+    --------------
+    
+    count(dest)
+    169755
+
+The above is calculation of contingency table of 10 minutes. The calculation of 15 minutes and 20 minutes has similar form. 
+I agree with the book said 10 minutes is the best, because it has the smallest number of Type-1 error. 
+In this case, the Type-I error is the counting number of _"**dep_delay >= some number**"_ (cancel the meeting) conditioned on _"**arr_delay >= 15**"_.
+        
+
 #### 5. Problem of Generating Dashboard as the book
 
 Now we have data in Cloud SQL which can be data resource of Data Studio. Naturally, the book uses Data Studio to make a report. 
